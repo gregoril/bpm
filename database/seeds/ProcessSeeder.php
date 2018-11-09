@@ -5,7 +5,7 @@ use ProcessMaker\Models\EnvironmentVariable;
 use ProcessMaker\Models\Screen;
 use ProcessMaker\Models\Process;
 use ProcessMaker\Models\ProcessTaskAssignment;
-use ProcessMaker\Models\Script;
+use ProcessMaker\Models\ScriptVersion;
 use ProcessMaker\Models\User;
 use ProcessMaker\Providers\WorkflowServiceProvider;
 
@@ -58,13 +58,13 @@ class ProcessSeeder extends Seeder
             foreach ($scriptTasks as $scriptTaskNode) {
                 $scriptTask = $scriptTaskNode->getBpmnElementInstance();
                 //Create a row in the Scripts table
-                $script = factory(Script::class)->create([
+                $script_version = factory(ScriptVersion::class)->create([
                     'title' => $scriptTask->getName('name') . ' Script',
                     'code' => $scriptTaskNode->getElementsByTagName('script')->item(0)->nodeValue,
                     'language' => $this->languageOfMimeType($scriptTask->getScriptFormat()),
                 ]);
                 $scriptTaskNode->setAttributeNS(
-                    WorkflowServiceProvider::PROCESS_MAKER_NS, 'scriptRef', $script->id
+                    WorkflowServiceProvider::PROCESS_MAKER_NS, 'scriptRef', $script_version->script_id
                 );
                 $scriptTaskNode->setAttributeNS(
                     WorkflowServiceProvider::PROCESS_MAKER_NS, 'scriptConfiguration', '{}'

@@ -18,8 +18,8 @@ class CreateScriptVersionsTable extends Migration
             $table->unsignedInteger('script_id');
             $table->text('title');
             $table->text('description')->nullable();
-            $table->string('type', 20)->default('FORM');
-            $table->text('content')->nullable();
+            $table->string('language', 20)->default('PHP');
+            $table->text('code')->nullable();
             $table->timestamps();
 
             $table->foreign('script_id')->references('id')->on('scripts')->onDelete('cascade');

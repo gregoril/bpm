@@ -37,12 +37,6 @@ use ProcessMaker\Exception\ScriptLanguageNotSupported;
 class Script extends Model
 {
 
-    protected $guarded = [
-        'id',
-        'created_at',
-        'updated_at',
-    ];
-
     private static $scriptFormats = [
         'application/x-php' => 'php',
         'application/x-lua' => 'lua',
@@ -57,19 +51,22 @@ class Script extends Model
      */
     public static function rules($existing = null)
     {
-        $rules = [
-            'title' => 'required|unique:scripts,title',
-            'language' => 'required|in:php,lua'
-        ];
-        if ($existing) {
-            // ignore the unique rule for this id
-            $rules['title'] = [
-                'required',
-                'string',
-                Rule::unique('scripts')->ignore($existing->id, 'id')
-            ];
-        }
-        return $rules;
+        return ScriptVersion::rules($existing);
+    }
+
+    /**
+     * Script Versions
+     *
+     * @return array
+     */
+    public function versions()
+    {
+        return $this->hasMany(ScriptVersion::class);
+    }
+
+    public function latestVersion()
+    {
+        return $this->versions()->latest()->first();
     }
 
     /**
